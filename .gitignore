@@ -1,0 +1,16 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+data*/
+lit*/
+
+# Outputs
+*.pdf
+*.html
+*.doc*
+*.xlsx
+
+# System files
+.DS_Store
