@@ -10,7 +10,7 @@ if(temp < 0) {
   print("It's not freezing.")
 }
 
-checkweather <- function(x){
+checkweather <- function(x, verbose = FALSE){
   #x is temperatue, degrees c
   # verbose is logical value, indicating print resultz
   if (FALSE) {
@@ -43,18 +43,19 @@ checkweather(50)
 #leapyear function practice
 
 is.leap <- function(x) {
-  if x %% 4{
-    if x %% 100{
-      else {
-        if x %% 400{
-          print("It's a leap year.")
-        else {
-          print("It's a normal year.")
-        }
-      }
+  if ((x %% 4) == 0) {
+    if ((x %% 100) == 0){
+      print(paste0(x,"is a normal year.")) 
     }
-  } else {
-    print("It's a normal year.")
   }
+    else {
+        if ((x %% 400) == 0){
+          print(paste0(x,"is a leap year."))
+          }
+        else {
+          print(paste0(x,"is a normal year.")) 
+        }
+} else {
+        print(paste0(x,"is a leap year."))
+      }
   }
-}
