@@ -24,3 +24,20 @@ marine %>%
   #arrange(Family,Length) %>% #dplyr methods
   group_by(Family) %>%
   summarise(Length = mean(Length))
+
+# base R
+X <- merge(sales, descriptions, all = TRUE)
+
+# dplyr
+X2 <- sales %>%
+  full_join(descriptions, by = "CodeNum")
+
+
+library(reshape2)
+baseball <- read.table("./dataraw/Transpos.dat",
+                       head = FALSE,
+                       col.names = c("Team", "Player", "Type", "Entry"))
+baseball.m <- melt(baseball,
+                   idvars = c("Team", "Player", "Type"),
+                   measure.vars = "Entry")
+head(baseball.m)
