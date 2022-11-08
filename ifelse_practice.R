@@ -16,7 +16,9 @@ checkweather <- function(x, verbose = FALSE){
   if (FALSE) {
     x = 5
   }
-  
+  if (x < -273) {
+    stop("The temperature can not be that low")
+  }
   #xf <- 32 + 1.8*x
   #print(paste0("In Farenheit it is ", xf, "."))
   if (x < 0) {
