@@ -2,6 +2,7 @@
 title: "Penguins, meet Quarto!"
 format: html
 editor: visual
+number-sections: true
 ---
 
 ```{r}
