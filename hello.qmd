@@ -1,44 +1,73 @@
 ---
-title: "Penguins, meet Quarto!"
-format: html
-editor: visual
+title: "Replicate"
+author: "Grace A"
+date: today
+format: 
+    html:
+        code-fold: true
+        theme: cosmo
 number-sections: true
+bibliography: 
+    - ref.bib
+    - refPackages.bib
+csl: ecology.csl
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
 ---
 
 ```{r}
-#| label: load-packages
-#| include: false
+library(ggplot2)
+library(plotly)
 
-library(tidyverse)
-library(palmerpenguins)
+anoxia <- read_csv("HW2/anoxia_jmt3_SL.csv")
+
+#𝑦1t = −0.980
+#(0.405) + 6.903 · 10−6
+#(1.069·10−6) JanAprTNLoadt
+
+#𝑦2t = −0.217
+#(0.426) + 5.596 · 10−6
+#(1.360·10−6) JanMa𝑦TNLoadt
+
+Equ8 <- function(x){(-0.980 + 6.903)*((10^-6)*(anoxia$JanAprTNLoad))}
+Equ9 <- function(x){(-0.217 + 5.596)*((10^-6)*(anoxia$JanMayTNLoad))}
+
 ```
 
-## Meet Quarto
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Meet the penguins
-
-![](https://raw.githubusercontent.com/quarto-dev/quarto-web/main/docs/get-started/hello/rstudio/lter_penguins.png){style="float:right;" fig-alt="Illustration of three species of Palmer Archipelago penguins: Chinstrap, Gentoo, and Adelie. Artwork by @allison_horst." width="401"}
-
-The `penguins` data from the [**palmerpenguins**](https://allisonhorst.github.io/palmerpenguins "palmerpenguins R package") package contains size measurements for `r nrow(penguins)` penguins from three species observed on three islands in the Palmer Archipelago, Antarctica.
-
-The plot below shows the relationship between flipper and bill lengths of these penguins.
 
 ```{r}
-#| label: plot-penguins
-#| warning: false
-#| echo: false
+Ear <- ggplot(anoxia, aes(x = Year, y = EarlySummerAnoxicVol)) +
+  geom_jitter(size = 0.6, alpha = 0.9, width = 0.2) +
+  theme_light() + stat_function(fun = Equ8)
+ggplotly(Ear, tooltip = c("y"))
 
-ggplot(penguins, 
-       aes(x = flipper_length_mm, y = bill_length_mm)) +
-  geom_point(aes(color = species, shape = species)) +
-  scale_color_manual(values = c("darkorange","purple","cyan4")) +
-  labs(
-    title = "Flipper and bill length",
-    subtitle = "Dimensions for penguins at Palmer Station LTER",
-    x = "Flipper length (mm)", y = "Bill length (mm)",
-    color = "Penguin species", shape = "Penguin species"
-  ) +
-  theme_minimal()
+Lat <- ggplot(anoxia, aes(x = Year, y = LateSummerAnoxicVol)) +
+  geom_jitter(size = 0.6, alpha = 0.9, width = 0.2) +
+  theme_light() + stat_function(fun = Equ9)
+ggplotly(Lat, tooltip = c("y"))
+
+ggplot(anoxia,aes(Year,EarlySummerAnoxicVol)) + geom_point(shape = 1) + geom_line(color="black") + xlab(label = "Year") + ylab(label = "Early Summer Volume (km^3)")
+
+ggplot(anoxia,aes(Year,LateSummerAnoxicVol)) + geom_point(shape = 1) + geom_line(color="black") + xlab(label = "Year") + ylab(label = "Late Summer Volume (km^3)")
+```
+
+
+ggplot(anoxia,aes(Year,EarlySummerAnoxicVol)) + geom_line(color="blue", size=0.5) + 
+  geom_smooth(method="lm", color = "dark red") + geom_hline(yintercept=0, linetype="dashed", color = "dark gray", size = 1) + xlab(label = "Year") + ylab(label = "Late Summer Volume (km^3)")
+
+
+```{r}
+library(rpart)
+library(rpart.plot)
+# classification
+m0 = rpart(Year ~ ., data = anoxia)
+rpart.plot(m0)
+# regression
+m1 = rpart(Petal.Width ~ ., 
+           control = rpart.control(maxdepth = 2),
+           data = anoxia)
+rpart.plot(m1)
 ```
